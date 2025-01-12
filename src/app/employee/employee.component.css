@@ -1,0 +1,5 @@
+@import '@angular/material/prebuilt-themes/indigo-pink.css'; 
+
+.tbl1{
+    padding-right: 55px !important;
+  }

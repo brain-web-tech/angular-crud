@@ -1,0 +1,154 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<div class="container">  
+    <mat-card>  
+      <mat-toolbar color="accent">  
+        <div align="center">  
+          Employee CRUD Operation  
+        </div>    
+      </mat-toolbar>  
+    <br><br>  
+      <mat-card-content>  
+        <form [formGroup]="employeeForm" (ngSubmit)="onFormSubmit(employeeForm.value)">
+            <div class="row" style="margin:0px;">
+                <div cla="col-sm-8">
+                  <table>  
+                    <tr>  
+                      <td class="tbl1">  
+                        <mat-form-field class="demo-full-width">
+                          <input formControlName="EmpName" matTooltip="Enter Employee Name" matInput placeholder="Employee Name">  
+                        </mat-form-field>  
+                        <mat-error>  
+                          <span *ngIf="!employeeForm.get('EmpName').value && employeeForm.get('EmpName').touched"></span>  
+                        </mat-error>  
+                      </td>  
+                      <td class="tbl1">  
+                        <mat-form-field class="demo-full-width">  
+                          <input matInput [matDatepicker]="picker" matTooltip="Enter Date Of Birth" formControlName="DateOfBirth"placeholder="Choose Date Of Birth">  
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>  
+                          <mat-datepicker #picker></mat-datepicker>  
+                        </mat-form-field>  
+                        <mat-error>  
+                          <span *ngIf="!employeeForm.get('DateOfBirth').value && employeeForm.get('DateOfBirth').touched"></span>  
+                        </mat-error>  
+                      </td>  
+                      <td class="tbl1">  
+                        <mat-form-field class="demo-full-width">  
+                          <input formControlName="EmailId" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" type="email" name="email" matTooltip="Enter EmailId" matInput placeholder="EmailId">  
+                        </mat-form-field>  
+                        <mat-error>  
+                          <span *ngIf="!employeeForm.get('EmailId').value && employeeForm.get('EmailId').touched"></span>  
+                        </mat-error>  
+                      </td>  
+                    </tr>  
+                    <tr>  
+                      <td class="tbl1">  
+                        <span>Gender &nbsp;</span>
+                        <mat-radio-group matTooltip="Enter Gender" formControlName="Gender">  
+                            <mat-radio-button value="0">Male</mat-radio-button>&nbsp;
+                            <mat-radio-button value="1">Female</mat-radio-button>  
+                          </mat-radio-group>  
+                        <mat-error>  
+                          <span *ngIf="!employeeForm.get('Gender').value && employeeForm.get('Gender').touched"></span>  
+                        </mat-error>  
+                      </td>  
+                      <td class="tbl1">  
+                        <mat-form-field class="demo-full-width">  
+                          <textarea matTooltip="Enter Address" formControlName="Address" matInput placeholder="Address"></textarea>
+                        </mat-form-field>  
+                        <mat-error>  
+                          <span *ngIf="!employeeForm.get('Address').value && employeeForm.get('Address').touched"></span>  
+                        </mat-error>  
+                      </td>  
+                      <td class="tbl1">  
+                        <mat-form-field class="demo-full-width">  
+                          <input formControlName="PinCode" matTooltip="Enter Pine Code" matInput placeholder="PinCode" maxlength="6" (keypress)="keyPressNumbers($event)">  
+                        </mat-form-field>  
+                        <mat-error>  
+                          <span *ngIf="!employeeForm.get('PinCode').value && employeeForm.get('PinCode').touched"></span>  
+                        </mat-error>  
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="tbl1">
+                        <label>Designation</label>&nbsp;
+                        &nbsp;<input type="checkbox" formControlName="MCA" name="MCA">MCA&nbsp;
+                        &nbsp;<input type="checkbox" formControlName="MBA" name="MBA">MBA&nbsp;
+                      </td>
+                      <td class="tbl1">
+                        <select formControlName="Country" class="form-control">  
+                          <option disabled>Select Country</option>  
+                          <option>India</option>  
+                          <option>Japan</option>
+                          <option>Canada</option>
+                      </select>  
+                      </td>
+                    </tr>                    
+                  </table>
+                </div>
+                &nbsp;
+                <div cla="col-sm-4">
+                  <table>
+                    <tr>
+                      <td>
+                        <div class="form-group" style="width:182px;">
+                          <div class="custom-file">
+                            <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" class="form-Control">
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <img [src]="imageSrc" *ngIf="imageSrc" style="height: 100px; width:100px">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td  class="content-center">  
+                        <button type="submit" mat-raised-button color="accent"matTooltip="Click Submit Button"[disabled]="!employeeForm.valid">Submit</button>      
+                        &nbsp;
+                        <button type="reset" mat-raised-button color="accent"matTooltip="Click Reset Button" (click)="resetForm()">Reset</button>  
+                      </td>                      
+                    </tr>  
+                  </table>  
+                </div>
+            </div>                
+          <br><br>  
+          <table class="table"> 
+            <thead>
+              <tr ngclass="btn-primary">  
+                <th>Employee Name</th>  
+                <th>Date Of Birth</th>  
+                <th>Email Id</th>  
+                <th>Gender</th>  
+                <th>Address</th>  
+                <th>Pine Code</th>
+                <th>File</th>  
+                <th>Edit</th>  
+                <th>Delete</th>  
+              </tr>  
+            </thead> 
+              <tbody>
+                <tr *ngFor="let employee of allEmployees | async">  
+                  <td>{{employee.EmpName}}</td>  
+                  <td>{{employee.DateOfBirth }}</td>  
+                  <td>{{employee.EmailId}}</td>  
+                  <td>{{employee.Gender == 0 ? 'Male' : 'Female'}}</td>  
+                  <td>{{employee.Address}}</td>  
+                  <td>{{employee.PinCode}}</td>
+                  <td>
+                    <button (click)="downloadImage(employee.FilePath)" class="btn btn-link">  
+                      <img [src]="employee.FilePath" *ngIf="employee.FilePath" style="height: 50px; width:50px">
+                    </button> 
+                  </td>               
+                  <td>  
+                    <button type="button" class="btn btn-info" matTooltip="Click Edit Button"(click)="loadEmployeeToEdit(employee.EmpId)">Edit</button>  
+                  </td>  
+                  <td class="tbl2">  
+                    <button type="button" class="btn btn-danger" matTooltip="Click Delete Button"(click)="deleteEmployee(employee.EmpId)">Delete</button>  
+                  </td>  
+                </tr> 
+              </tbody>
+            </table>  
+        </form>  
+      </mat-card-content>  
+    </mat-card>  
+    </div>  
